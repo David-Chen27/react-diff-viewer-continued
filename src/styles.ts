@@ -2,6 +2,7 @@ import { CSSInterpolation } from '@emotion/css';
 import createEmotion from '@emotion/css/create-instance';
 
 export interface ReactDiffViewerStyles {
+  copyButton?: string;
   diffContainer?: string;
   diffRemoved?: string;
   diffAdded?: string;
@@ -101,6 +102,8 @@ export default (
   const themeVariables = {
     light: {
       ...{
+        copyButtonColor: '#24292e',
+        copyButtonHoverColor: '#757a9b',
         diffViewerBackground: '#fff',
         diffViewerColor: '#212529',
         addedBackground: '#e6ffed',
@@ -131,6 +134,8 @@ export default (
     },
     dark: {
       ...{
+        copyButtonColor: '#757a9b',
+        copyButtonHoverColor: '#FFF',
         diffViewerBackground: '#2e303c',
         diffViewerColor: '#FFF',
         addedBackground: '#044B53',
@@ -164,6 +169,24 @@ export default (
   const variables = useDarkTheme ? themeVariables.dark : themeVariables.light;
 
   const { css, cx } = createEmotion({ key: 'react-diff', nonce });
+
+  const copyButton = css({
+    background: "transparent",
+    color: variables.copyButtonColor,
+    fontSize: '12px',
+    border: 'none',
+    outline: 'none',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      color: variables.copyButtonHoverColor,
+    },
+    '&:focus': {
+      outline: 'none',
+      boxShadow: 'none',
+    },
+  });
 
   const content = css({
     width: 'auto',
@@ -431,6 +454,7 @@ export default (
   })
 
   const defaultStyles: any = {
+    copyButton,
     diffContainer,
     diffRemoved,
     diffAdded,
