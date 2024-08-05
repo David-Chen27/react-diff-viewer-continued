@@ -37,7 +37,7 @@ describe('Testing react diff viewer', (): void => {
   it('It should render diff lines in diff view', (): void => {
     const node = render(<DiffViewer oldValue={oldCode} newValue={newCode} />);
 
-    expect(node.getAllByRole('row').length).toEqual(16);
+    expect(node.getAllByRole('row').length).toEqual(18);
   });
 
   it('It should render diff lines in inline view', (): void => {
@@ -45,6 +45,6 @@ describe('Testing react diff viewer', (): void => {
       <DiffViewer oldValue={oldCode} newValue={newCode} splitView={false} />,
     );
 
-    expect(node.getAllByRole('row').length).toEqual(26);
+    expect(node.getAllByRole('row').length).toEqual(29);
   });
 });
