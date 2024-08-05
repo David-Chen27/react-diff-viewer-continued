@@ -163,7 +163,7 @@ export default (
   const { css, cx } = createEmotion({ key: 'react-diff', nonce });
 
   const copyButton = css({
-    background: "transparent",
+    background: 'transparent',
     color: variables.copyButtonColor,
     fontSize: '12px',
     border: 'none',
@@ -405,7 +405,7 @@ export default (
     content,
     codeFoldContent,
     titleBlock,
-    copyButton
+    copyButton,
   };
 
   const computerOverrideStyles: ReactDiffViewerStyles = Object.keys(

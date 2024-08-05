@@ -1,11 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import {computeLineInformation, DiffInformation, DiffMethod, DiffType, LineInformation,} from './compute-lines';
-import computeStyles, {ReactDiffViewerStyles, ReactDiffViewerStylesOverride,} from './styles';
-import {ReactElement} from "react";
-import {computeHiddenBlocks} from "./compute-hidden-blocks";
+import {
+  computeLineInformation,
+  DiffInformation,
+  DiffMethod,
+  DiffType,
+  LineInformation,
+} from './compute-lines';
+import computeStyles, {
+  ReactDiffViewerStyles,
+  ReactDiffViewerStylesOverride,
+} from './styles';
+import { ReactElement } from 'react';
+import { computeHiddenBlocks } from './compute-hidden-blocks';
 
 const m = require('memoize-one');
 
@@ -38,7 +47,7 @@ export interface ReactDiffViewerProps {
   /**
    * Show the lines indicated here. Specified as L20 or R18 for respectively line 20 on the left or line 18 on the right.
    */
-  alwaysShowLines?: string[]
+  alwaysShowLines?: string[];
   // Show only diff between the two values.
   showDiffOnly?: boolean;
   // Render prop to format final string before displaying them in the UI.
@@ -74,8 +83,8 @@ export interface ReactDiffViewerProps {
   leftTitle?: string | ReactElement;
   // Title for left column
   rightTitle?: string | ReactElement;
-  	// Nonce
-	nonce?: string;
+  // Nonce
+  nonce?: string;
 }
 
 export interface ReactDiffViewerState {
@@ -83,11 +92,14 @@ export interface ReactDiffViewerState {
   expandedBlocks?: number[];
 }
 const copyToClipboard = (text: string, onCopy: () => void) => {
-  navigator.clipboard.writeText(text).then(() => {
-    onCopy();
-  }).catch(err => {
-    console.error('Failed to copy text: ', err);
-  });
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      onCopy();
+    })
+    .catch((err) => {
+      console.error('Failed to copy text: ', err);
+    });
 };
 
 interface CopyButtonProps {
@@ -95,7 +107,7 @@ interface CopyButtonProps {
   className: string;
 }
 
-const CopyButton: React.FC<CopyButtonProps> = ({ content, className}) => {
+const CopyButton: React.FC<CopyButtonProps> = ({ content, className }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -106,48 +118,50 @@ const CopyButton: React.FC<CopyButtonProps> = ({ content, className}) => {
   };
 
   return (
-      <button className={className} onClick={handleCopy}>
-        {copied ? (
-            <span>
-              <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  role="img"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  style={{display: 'inline-block', userSelect: 'none', verticalAlign: 'text-bottom', overflow: 'visible'}}
-              >
-                <path
-                    d="M13.485 1.929a1 1 0 0 1 1.415 1.415l-8.485 8.485a1 1 0 0 1-1.415 0l-4.243-4.243a1 1 0 0 1 1.415-1.415l3.536 3.536 7.657-7.657z"></path>
-              </svg>
-              <span style={{ marginLeft: '4px' }}>copied</span>
-            </span>
-        ) : (
-            <span>
-              <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  role="img"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  style={{
-                    display: 'inline-block',
-                    userSelect: 'none',
-                    verticalAlign: 'text-bottom',
-                    overflow: 'visible'
-                  }}
-              >
-                <path
-                    d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path>
-                <path
-                    d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
-              </svg>
-              <span style={{marginLeft: '4px'}}>copy</span>
-          </span>
-        )}
-      </button>
+    <button className={className} onClick={handleCopy}>
+      {copied ? (
+        <span>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            role="img"
+            width="16"
+            height="16"
+            fill="currentColor"
+            style={{
+              display: 'inline-block',
+              userSelect: 'none',
+              verticalAlign: 'text-bottom',
+              overflow: 'visible',
+            }}
+          >
+            <path d="M13.485 1.929a1 1 0 0 1 1.415 1.415l-8.485 8.485a1 1 0 0 1-1.415 0l-4.243-4.243a1 1 0 0 1 1.415-1.415l3.536 3.536 7.657-7.657z"></path>
+          </svg>
+          <span style={{ marginLeft: '4px' }}>copied</span>
+        </span>
+      ) : (
+        <span>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            role="img"
+            width="16"
+            height="16"
+            fill="currentColor"
+            style={{
+              display: 'inline-block',
+              userSelect: 'none',
+              verticalAlign: 'text-bottom',
+              overflow: 'visible',
+            }}
+          >
+            <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path>
+            <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+          </svg>
+          <span style={{ marginLeft: '4px' }}>copy</span>
+        </span>
+      )}
+    </button>
   );
 };
 
@@ -555,8 +569,6 @@ class DiffViewer extends React.Component<
     );
   };
 
-
-
   /**
    * Generates the entire diff view.
    */
@@ -575,7 +587,7 @@ class DiffViewer extends React.Component<
       disableWordDiff,
       compareMethod,
       linesOffset,
-      this.props.alwaysShowLines
+      this.props.alwaysShowLines,
     );
 
     const extraLines =
@@ -583,17 +595,23 @@ class DiffViewer extends React.Component<
         ? 0
         : Math.round(this.props.extraLinesSurroundingDiff);
 
-    const { lineBlocks, blocks } = computeHiddenBlocks(lineInformation, diffLines, extraLines)
+    const { lineBlocks, blocks } = computeHiddenBlocks(
+      lineInformation,
+      diffLines,
+      extraLines,
+    );
 
     return lineInformation.map(
       (line: LineInformation, lineIndex: number): ReactElement => {
-
         if (this.props.showDiffOnly) {
-          const blockIndex = lineBlocks[lineIndex]
+          const blockIndex = lineBlocks[lineIndex];
 
           if (blockIndex !== undefined) {
             const lastLineOfBlock = blocks[blockIndex].endLine === lineIndex;
-            if (!this.state.expandedBlocks.includes(blockIndex) && lastLineOfBlock) {
+            if (
+              !this.state.expandedBlocks.includes(blockIndex) &&
+              lastLineOfBlock
+            ) {
               return (
                 <React.Fragment key={lineIndex}>
                   {this.renderSkippedLineIndicator(
@@ -605,7 +623,7 @@ class DiffViewer extends React.Component<
                 </React.Fragment>
               );
             } else if (!this.state.expandedBlocks.includes(blockIndex)) {
-              return null
+              return null;
             }
           }
         }
@@ -613,7 +631,6 @@ class DiffViewer extends React.Component<
         const diffNodes = splitView
           ? this.renderSplitView(line, lineIndex)
           : this.renderInlineView(line, lineIndex);
-
 
         return diffNodes;
       },
@@ -660,11 +677,14 @@ class DiffViewer extends React.Component<
           }
           className={this.styles.titleBlock}
         >
-          <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <pre className={this.styles.contentText}>{leftTitle}</pre>
-            {typeof oldValue === 'string' && splitView &&
-                <CopyButton content={oldValue} className={this.styles.copyButton}/>
-            }
+            {typeof oldValue === 'string' && splitView && (
+              <CopyButton
+                content={oldValue}
+                className={this.styles.copyButton}
+              />
+            )}
           </div>
         </td>
         {splitView && (
@@ -672,11 +692,14 @@ class DiffViewer extends React.Component<
             colSpan={colSpanOnSplitView + columnExtension}
             className={this.styles.titleBlock}
           >
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <pre className={this.styles.contentText}>{rightTitle}</pre>
-              {typeof newValue === "string" &&
-                  <CopyButton content={newValue} className={this.styles.copyButton}/>
-              }
+              {typeof newValue === 'string' && (
+                <CopyButton
+                  content={newValue}
+                  className={this.styles.copyButton}
+                />
+              )}
             </div>
           </td>
         )}
@@ -684,8 +707,8 @@ class DiffViewer extends React.Component<
     );
 
     return (
-        <table
-            className={cn(this.styles.diffContainer, {
+      <table
+        className={cn(this.styles.diffContainer, {
           [this.styles.splitView]: splitView,
         })}
       >
