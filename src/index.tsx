@@ -19,6 +19,8 @@ export enum LineNumberPrefix {
 }
 
 export interface ReactDiffViewerProps {
+  // Enable/Disable copy to clipboard button.
+  copyButton?: boolean;
   // Old value to compare.
   oldValue: string | Object;
   // New value to compare.
@@ -669,6 +671,7 @@ class DiffViewer extends React.Component<
       compareMethod,
       hideLineNumbers,
       nonce,
+      copyButton
     } = this.props;
 
     if (typeof(compareMethod) === 'string' && compareMethod !== DiffMethod.JSON) {
@@ -771,7 +774,7 @@ class DiffViewer extends React.Component<
            } className={cn(this.styles.titleBlock, this.styles.column)} role={'columnheader'}>
              <div style={{display: 'flex', justifyContent: 'space-between'}}>
                <pre className={this.styles.contentText}>{leftTitle}</pre>
-               {typeof oldValue === 'string' && splitView &&
+               {typeof oldValue === 'string' && copyButton &&
                    <CopyButton content={oldValue} className={this.styles.copyButton} />
                }
              </div>
@@ -779,7 +782,7 @@ class DiffViewer extends React.Component<
            {splitView ? <td colSpan={colSpanOnSplitView} className={cn(this.styles.titleBlock, this.styles.column)} role={'columnheader'}>
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <pre className={this.styles.contentText}>{rightTitle}</pre>
-                {typeof newValue === "string" &&
+                {typeof newValue === "string" && copyButton &&
                     <CopyButton content={newValue} className={this.styles.copyButton}/>
                 }
               </div>
